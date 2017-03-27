@@ -28,6 +28,10 @@ unsigned int Dragon::get_random_value(){
 }
 
 #ifdef CPU_ONLY
+Dragon::Dragon() : mode(Dragon::CPU), solver_count(1), root_solver(true){}
+Dragon::~Dragon() {}
+void Dragon::set_device(const int device_id){}
+#else
 Dragon::Dragon() : mode(Dragon::CPU), solver_count(1), root_solver(true), cublas_handle(NULL), curand_handle(NULL){
     if(cublasCreate_v2(&cublas_handle) != CUBLAS_STATUS_SUCESS)
        LOG(ERROR) << "Coudn't create cublas handle.";
@@ -39,9 +43,5 @@ Dragon::~Dragon() {
     if (cublas_handle) cublasDestroy_v2(cublas_handle);
     if (curand_generator) curandDestroyGenerator(curand_generator);
 }
-void Dragon::set_device(const int device_id){}
-#else
-Dragon::Dragon() : mode(Dragon::CPU), solver_count(1), root_solver(true){}
-Dragon::~Dragon() {}
 void Dragon::set_device(const int device_id){}
 #endif
